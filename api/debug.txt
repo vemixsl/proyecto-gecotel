@@ -1,0 +1,6 @@
+Array
+(
+    [action] => calcularTarifa
+    [pais] => Zimbabue
+    [peso] => 35
+)

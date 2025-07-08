@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Objetos Prohibidos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff6b00;
+            --secondary: #d32f2f;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --success: #4caf50;
+            --danger: #f44336;
+            --warning: #ff9800;
+            --info: #2196f3;
+            --gray: #6c757d;
+            --border: #dee2e6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7f1 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--warning));
+            color: white;
+            text-align: center;
+            padding: 50px 20px;
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="0,0 100,100 0,100" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+        }
+
+        header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.2rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        header p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            font-weight: 300;
+        }
+
+        .header-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            width: 100px;
+            height: 100px;
+            line-height: 100px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.4rem;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--border);
+        }
+
+        h3 {
+            color: var(--dark);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            margin: 45px 0 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed var(--border);
+        }
+
+        h3 i {
+            color: var(--primary);
+            background: rgba(255, 107, 0, 0.1);
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            border-radius: 12px;
+        }
+
+        .explanation {
+            margin: 0 0 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 5px solid var(--primary);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .category-container {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .permitidos-container {
+            flex: 1;
+        }
+
+        .prohibidos-container {
+            flex: 2;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .permitido {
+            border-top: 5px solid var(--success);
+        }
+
+        .prohibido {
+            border-top: 5px solid var(--danger);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card i {
+            font-size: 2.2rem;
+        }
+
+        .permitido i {
+            color: var(--success);
+        }
+
+        .prohibido i {
+            color: var(--danger);
+        }
+
+        .card h4 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            color: var(--dark);
+        }
+
+        .card p {
+            color: #555;
+            line-height: 1.7;
+            font-size: 1.05rem;
+            margin-bottom: 20px;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .gallery-item {
+            background: var(--light);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+
+        .gallery-img {
+            height: 120px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .gallery-caption {
+            padding: 12px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .otros-prohibidos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .otro-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-top: 5px solid var(--danger);
+        }
+
+        .otro-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .otro-img {
+            height: 140px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .otro-content {
+            padding: 20px;
+        }
+
+        .otro-content h4 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .otro-content h4 i {
+            color: var(--danger);
+        }
+
+        .otro-content p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        footer {
+            background: linear-gradient(135deg, var(--dark), #1a2530);
+            color: #eee;
+            text-align: center;
+            padding: 30px;
+            border-radius: 30px 30px 0 0;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-content p {
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .disclaimer {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 992px) {
+            .category-container {
+                flex-direction: column;
+            }
+            
+            .otros-prohibidos {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.4rem;
+            }
+            
+            header p {
+                font-size: 1.1rem;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+            
+            h3 {
+                font-size: 1.5rem;
+            }
+            
+            section {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            header {
+                padding: 40px 20px;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .header-icon {
+                font-size: 3rem;
+                width: 80px;
+                height: 80px;
+                line-height: 80px;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            h3 {
+                font-size: 1.3rem;
+            }
+            
+            section {
+                padding: 25px 20px;
+            }
+            
+            .otros-prohibidos {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-icon">
+            <i class="fas fa-ban"></i>
+        </div>
+        <h1>Guía de Objetos Prohibidos</h1>
+        <p>Información sobre artículos permitidos y prohibidos para transporte y envío</p>
+    </header>
+
+    <div class="container">
+        <section>
+            <h2><i class="fas fa-box-open"></i>Clasificación de objetos por categoría</h2>
+
+            <!-- DOMÉSTICOS -->
+            <h3><i class="fas fa-home"></i>Artículos domésticos</h3>
+            <p class="explanation">Algunos productos domésticos están prohibidos por contener aerosoles, pinturas inflamables o adhesivos peligrosos.</p>
+            
+            <div class="category-container">
+                <div class="permitidos-container">
+                    <div class="card permitido">
+                        <div class="card-header">
+                            <i class="fas fa-check-circle"></i>
+                            <h4>Permitidos</h4>
+                        </div>
+                        <p>Chocolates, golosinas, camisas, vestidos, libros, utensilios de cocina no peligrosos</p>
+                    </div>
+                </div>
+                
+                <div class="prohibidos-container">
+                    <div class="card prohibido">
+                        <div class="card-header">
+                            <i class="fas fa-ban"></i>
+                            <h4>Prohibidos</h4>
+                        </div>
+                        <div class="gallery">
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1589985605151-080f6c8aad1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Aerosoles</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1579033462043-0f11a7862f7d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Pinturas inflamables</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Pegamentos fuertes</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1595425970377-4fde9b1a0bb9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Productos químicos</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DEPORTIVOS -->
+            <h3><i class="fas fa-futbol"></i>Artículos deportivos</h3>
+            <p class="explanation">Se prohíben aquellos que contienen gases comprimidos o municiones.</p>
+            
+            <div class="category-container">
+                <div class="permitidos-container">
+                    <div class="card permitido">
+                        <div class="card-header">
+                            <i class="fas fa-check-circle"></i>
+                            <h4>Permitidos</h4>
+                        </div>
+                        <p>Raquetas, pelotas, zapatos deportivos, ropa deportiva, protectores, guantes</p>
+                    </div>
+                </div>
+                
+                <div class="prohibidos-container">
+                    <div class="card prohibido">
+                        <div class="card-header">
+                            <i class="fas fa-ban"></i>
+                            <h4>Prohibidos</h4>
+                        </div>
+                        <div class="gallery">
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1618331835717-801e976710b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Municiones</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1589985605151-080f6c8aad1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Cartuchos de aire</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1600267175161-cfaa711b4a81?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Armas deportivas</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1590934013380-1d0b9d9e0a5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Gas comprimido</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CAMPING -->
+            <h3><i class="fas fa-campground"></i>Artículos de camping</h3>
+            <p class="explanation">Están prohibidos si contienen gas comprimido, cerillas o combustibles inflamables.</p>
+            
+            <div class="category-container">
+                <div class="permitidos-container">
+                    <div class="card permitido">
+                        <div class="card-header">
+                            <i class="fas fa-check-circle"></i>
+                            <h4>Permitidos</h4>
+                        </div>
+                        <p>Carpas, sacos de dormir, mochilas, linternas sin baterías peligrosas, utensilios de cocina</p>
+                    </div>
+                </div>
+                
+                <div class="prohibidos-container">
+                    <div class="card prohibido">
+                        <div class="card-header">
+                            <i class="fas fa-ban"></i>
+                            <h4>Prohibidos</h4>
+                        </div>
+                        <div class="gallery">
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1615876234886-fd9a39fda97f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Gas portátil</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1600267175161-cfaa711b4a81?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Cerillas</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1600166898405-da9535204843?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Hornillos con combustible</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1590934013380-1d0b9d9e0a5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Combustibles</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BUCEO -->
+            <h3><i class="fas fa-swimmer"></i>Artículos de buceo</h3>
+            <p class="explanation">Se prohíben los que incluyen tanques de gas o aire comprimido.</p>
+            
+            <div class="category-container">
+                <div class="permitidos-container">
+                    <div class="card permitido">
+                        <div class="card-header">
+                            <i class="fas fa-check-circle"></i>
+                            <h4>Permitidos</h4>
+                        </div>
+                        <p>Trajes de buceo, máscara, esnórquel, aletas, gafas, relojes resistentes al agua</p>
+                    </div>
+                </div>
+                
+                <div class="prohibidos-container">
+                    <div class="card prohibido">
+                        <div class="card-header">
+                            <i class="fas fa-ban"></i>
+                            <h4>Prohibidos</h4>
+                        </div>
+                        <div class="gallery">
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1595514531776-00a7ef7e5d3c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Botellas de aire</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1589985605151-080f6c8aad1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Tanques de oxígeno</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1618331835717-801e976710b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Compresores</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1590934013380-1d0b9d9e0a5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Equipos de presión</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COSMÉTICOS Y MEDICAMENTOS -->
+            <h3><i class="fas fa-pump-medical"></i>Cosméticos y medicamentos</h3>
+            <p class="explanation">Algunos contienen alcohol, están embalados en hielo seco o son inflamables.</p>
+            
+            <div class="category-container">
+                <div class="permitidos-container">
+                    <div class="card permitido">
+                        <div class="card-header">
+                            <i class="fas fa-check-circle"></i>
+                            <h4>Permitidos</h4>
+                        </div>
+                        <p>Jabones, brillo labial, ibuprofeno, antiácidos, vitaminas, cremas no inflamables</p>
+                    </div>
+                </div>
+                
+                <div class="prohibidos-container">
+                    <div class="card prohibido">
+                        <div class="card-header">
+                            <i class="fas fa-ban"></i>
+                            <h4>Prohibidos</h4>
+                        </div>
+                        <div class="gallery">
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1595425970377-4fde9b1a0bb9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Perfumes</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1589985605151-080f6c8aad1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Aerosoles</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Medicamentos alcohólicos</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1618331835717-801e976710b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Hielo seco</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AUTOMÓVILES Y DISPOSITIVOS MÉDICOS -->
+            <h3><i class="fas fa-tools"></i>Piezas de automóvil y dispositivos médicos</h3>
+            <p class="explanation">Pueden contener líquidos inflamables, aditivos o mercurio.</p>
+            
+            <div class="category-container">
+                <div class="permitidos-container">
+                    <div class="card permitido">
+                        <div class="card-header">
+                            <i class="fas fa-check-circle"></i>
+                            <h4>Permitidos</h4>
+                        </div>
+                        <p>Espejos, fundas de asiento, estetoscopio, tensiómetros digitales, herramientas limpias</p>
+                    </div>
+                </div>
+                
+                <div class="prohibidos-container">
+                    <div class="card prohibido">
+                        <div class="card-header">
+                            <i class="fas fa-ban"></i>
+                            <h4>Prohibidos</h4>
+                        </div>
+                        <div class="gallery">
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1579033462043-0f11a7862f7d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Termómetros con mercurio</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1595425970377-4fde9b1a0bb9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Aditivos</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1590934013380-1d0b9d9e0a5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Piezas con líquido</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1589985605151-080f6c8aad1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Líquidos inflamables</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VALORES Y BATERÍAS -->
+            <h3><i class="fas fa-coins"></i>Objetos de valor, baterías y electrónica</h3>
+            <p class="explanation">Los objetos de valor están prohibidos por riesgo de robo, y las baterías sueltas por peligro de incendio.</p>
+            
+            <div class="category-container">
+                <div class="permitidos-container">
+                    <div class="card permitido">
+                        <div class="card-header">
+                            <i class="fas fa-check-circle"></i>
+                            <h4>Permitidos</h4>
+                        </div>
+                        <p>Dispositivos con batería instalada (teléfonos, tablets, laptops), accesorios electrónicos seguros</p>
+                    </div>
+                </div>
+                
+                <div class="prohibidos-container">
+                    <div class="card prohibido">
+                        <div class="card-header">
+                            <i class="fas fa-ban"></i>
+                            <h4>Prohibidos</h4>
+                        </div>
+                        <div class="gallery">
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1606220588915-4a7e4a9d0a5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Baterías sueltas</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1589985605151-080f6c8aad1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Monedas y oro</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1590934013380-1d0b9d9e0a5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Joyas valiosas</div>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="gallery-img" style="background-image: url('https://images.unsplash.com/photo-1618331835717-801e976710b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                                <div class="gallery-caption">Cheques y valores</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GENERALES -->
+            <h3><i class="fas fa-exclamation-triangle"></i>Otros objetos prohibidos</h3>
+            <p class="explanation">Artículos que representan un riesgo especial y están estrictamente prohibidos en cualquier tipo de envío.</p>
+            
+            <div class="otros-prohibidos">
+                <div class="otro-card">
+                    <div class="otro-img" style="background-image: url('https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                    <div class="otro-content">
+                        <h4><i class="fas fa-radiation"></i> Radiactivos</h4>
+                        <p>Uranio, radio, materiales nucleares</p>
+                    </div>
+                </div>
+                
+                <div class="otro-card">
+                    <div class="otro-img" style="background-image: url('https://images.unsplash.com/photo-1595514531776-00a7ef7e5d3c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                    <div class="otro-content">
+                        <h4><i class="fas fa-skull-crossbones"></i> Tóxicos</h4>
+                        <p>Pesticidas, venenos, químicos peligrosos</p>
+                    </div>
+                </div>
+                
+                <div class="otro-card">
+                    <div class="otro-img" style="background-image: url('https://images.unsplash.com/photo-1618331835717-801e976710b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                    <div class="otro-content">
+                        <h4><i class="fas fa-cannabis"></i> Drogas</h4>
+                        <p>Estupefacientes y sustancias prohibidas</p>
+                    </div>
+                </div>
+                
+                <div class="otro-card">
+                    <div class="otro-img" style="background-image: url('https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                    <div class="otro-content">
+                        <h4><i class="fas fa-eye-slash"></i> Objetos obscenos</h4>
+                        <p>Contenido inmoral o prohibido por ley</p>
+                    </div>
+                </div>
+                
+                <div class="otro-card">
+                    <div class="otro-img" style="background-image: url('https://images.unsplash.com/photo-1600166898405-da9535204843?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')"></div>
+                    <div class="otro-content">
+                        <h4><i class="fas fa-dog"></i> Animales vivos</h4>
+                        <p>No se permiten en envíos</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p><i class="fas fa-info-circle"></i> Esta guía se actualiza periódicamente según normativas internacionales</p>
+            <p>© 2023 Guía de Objetos Prohibidos - Todos los derechos reservados</p>
+            <div class="disclaimer">
+                <i class="fas fa-exclamation-triangle"></i> La información proporcionada es de carácter general. Consulte siempre las regulaciones específicas de su país y transportista.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

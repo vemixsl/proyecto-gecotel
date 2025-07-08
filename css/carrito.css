@@ -1,0 +1,103 @@
+/* Estilos para la tienda */
+.product-card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.product-card .card-img-top {
+    height: 180px;
+    object-fit: cover;
+    padding: 15px;
+}
+
+.floating-cart .badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+}
+
+/* Estilos para el modal del carrito (opcional) */
+.cart-modal .list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cart-modal .item-quantity {
+    width: 50px;
+    text-align: center;
+}
+
+/* Estilos para el carrito */
+#cart-button {
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #ffc107 0%, #bb8f0c 100%);
+    border: none;
+}
+
+#cart-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2) !important;
+}
+
+.cart-text {
+    padding-top: 7px;
+    font-size: 10px;
+    line-height: 1;
+}
+
+#cartModal .modal-header {
+    border-radius: 0;
+}
+
+#cartModal .table th {
+    border-top: none;
+    font-weight: 500;
+}
+
+#cartModal .img-thumbnail {
+    padding: 0.25rem;
+}
+
+#checkout-btn {
+    background: linear-gradient(135deg, #ffc107 0%, #bb8f0c 100%);
+    border: none;
+    padding: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+#checkout-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.input-group.input-group-sm button {
+    padding: 0.25rem 0.5rem;
+}
+
+.remove-item {
+    padding: 0.25rem 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.remove-item:hover {
+    transform: scale(1.1);
+}
+
+/* Animación cuando se añade al carrito */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.btn-success {
+    animation: pulse 0.5s ease;
+}

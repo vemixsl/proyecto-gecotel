@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotizador de Envíos</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --light: #ecf0f1;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            background: var(--secondary);
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 15px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .tab-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .tab-button.active {
+            background: white;
+            color: var(--secondary);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 25px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        input:focus, select:focus {
+            border-color: var(--secondary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+        }
+        
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background: var(--light);
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.2rem;
+            display: none;
+        }
+        
+        .result.success {
+            background: rgba(46, 204, 113, 0.15);
+            color: #27ae60;
+            display: block;
+        }
+        
+        .result.error {
+            background: rgba(231, 76, 60, 0.15);
+            color: #c0392b;
+            display: block;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid var(--secondary);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .country-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .country-item {
+            padding: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .country-item:hover {
+            background: #f0f7ff;
+        }
+        
+        .zone-display {
+            text-align: center;
+            margin: 15px 0;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 0;
+            }
+            
+            body {
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Cotizador de Envíos</h1>
+            <p>Calcula el costo de tus envíos nacionales e internacionales</p>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab-button active" data-tab="nacional">Nacional</button>
+            <button class="tab-button" data-tab="internacional">Internacional</button>
+        </div>
+        
+        <!-- Pestaña Nacional -->
+        <div id="nacional" class="tab-content active">
+            <div class="form-group">
+                <label for="peso-nacional">Peso del paquete (kg)</label>
+                <input type="number" id="peso-nacional" step="0.1" min="0.1" placeholder="Ej: 2.5" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="tipo-envio">Tipo de envío</label>
+                <select id="tipo-envio">
+                    <option value="normal">Normal</option>
+                    <option value="express">Express</option>
+                </select>
+            </div>
+            
+            <button id="btn-cotizar-nacional" class="btn">Calcular Costo</button>
+            
+            <div id="resultado-nacional" class="result"></div>
+        </div>
+        
+        <!-- Pestaña Internacional -->
+        <div id="internacional" class="tab-content">
+            <div class="info-box">
+                <strong>Información:</strong> Selecciona un país de destino y el peso de tu paquete para calcular el costo de envío.
+            </div>
+            
+            <div class="form-group">
+                <label for="pais-destino">País de destino</label>
+                <input type="text" id="pais-destino" placeholder="Buscar país..." autocomplete="off">
+                <div id="country-list" class="country-list"></div>
+            </div>
+            
+            <div id="zona-display" class="zone-display">Zona: -</div>
+            
+            <div class="form-group">
+                <label for="peso-internacional">Peso del paquete (kg)</label>
+                <input type="number" id="peso-internacional" step="0.1" min="0.1" max="70" placeholder="Máx. 70 kg" required>
+            </div>
+            
+            <button id="btn-cotizar-internacional" class="btn">Calcular Costo de Envío</button>
+            
+            <div id="resultado-internacional" class="result"></div>
+        </div>
+        
+        <footer>
+            <p>Sistema de cotización basado en tarifas internacionales 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        // Datos de zonas (extraídos de Zonas.pdf)
+        const paisesZonas = {
+            "Afghanistan": 7, "Albania": 3, "Algeria": 4, "Andorra": 3, "Angola": 4,
+            "Anguilla": 8, "Antigua And Barbuda": 8, "Argentina": 8, "Armenia": 7,
+            "Aruba": 8, "Australia": 8, "Austria": 3, "Azerbaijan": 7, "Bahrain": 7,
+            "Bangladesh": 6, "Barbados": 8, "Belarus": 3, "Belgium": 3, "Belize": 8,
+            "Benin": 4, "Bermuda": 8, "Bhutan": 6, "Bolivia": 8, "Bosnia And Herzegovina": 3,
+            "Botswana": 4, "Brazil": 8, "British Indian Ocean Territory": 4, "Brunei": 6,
+            "Bulgaria": 3, "Burkina Faso": 4, "Burundi": 4, "Cambodia": 6, "Cameroon": 4,
+            "Canada": 8, "Cape Verde": 4, "Cayman Islands": 8, "Central African Republic": 4,
+            "Chad": 4, "Chile": 8, "China": 6, "Colombia": 8, "Comoros": 4, "Congo": 4,
+            "Congo, DPR": 4, "Cook Islands": 8, "Costa Rica": 8, "Cote D'Ivoire": 4,
+            "Croatia": 3, "Cuba": 8, "Cyprus": 3, "Czech Republic": 3, "Denmark": 3,
+            "Djibouti": 4, "Dominica": 8, "Dominican Republic": 8, "Ecuador": 8,
+            "Egypt": 4, "El Salvador": 8, "Equatorial Guinea": 4, "Eritrea": 4,
+            "Estonia": 3, "Ethiopia": 4, "Falkland Islands (Malvinas)": 8, "Faroe Islands": 3,
+            "Fiji": 8, "Finland": 3, "France": 3, "French Guiana": 8, "French Polynesia": 8,
+            "Gabon": 4, "Gambia": 4, "Georgia": 7, "Germany": 3, "Ghana": 4, "Gibraltar": 3,
+            "Greece": 3, "Greenland": 8, "Grenada": 8, "Guadeloupe": 8, "Guam": 8,
+            "Guatemala": 8, "Guinea": 4, "Guinea-Bissau": 4, "Guyana": 8, "Haiti": 8,
+            "Honduras": 8, "Hong Kong": 6, "Hungary": 3, "Iceland": 3, "India": 6,
+            "Indonesia": 6, "Iran": 7, "Iraq": 7, "Ireland": 3, "Israel": 7, "Italy": 3,
+            "Jamaica": 8, "Japan": 6, "Jordan": 7, "Kazakhstan": 7, "Kenya": 4,
+            "Kiribati": 8, "Kuwait": 7, "Kyrgyzstan": 7, "Laos": 6, "Latvia": 3,
+            "Lebanon": 7, "Lesotho": 4, "Liberia": 4, "Libya": 4, "Liechtenstein": 3,
+            "Lithuania": 3, "Luxembourg": 3, "Madagascar": 4, "Malawi": 4, "Malaysia": 6,
+            "Maldives": 6, "Mali": 4, "Malta": 3, "Martinique": 8, "Mauritania": 4,
+            "Mauritius": 4, "Mexico": 8, "Moldova": 3, "Monaco": 3, "Mongolia": 7,
+            "Montenegro": 3, "Montserrat": 8, "Morocco": 4, "Mozambique": 4, "Myanmar (Burma)": 6,
+            "Namibia": 4, "Nauru": 8, "Nepal": 6, "Netherlands": 3, "New Caledonia": 8,
+            "New Zealand": 8, "Nicaragua": 8, "Niger": 4, "Nigeria": 4, "Norway": 3,
+            "Oman": 7, "Pakistan": 6, "Panama": 8, "Papua New Guinea": 8, "Paraguay": 8,
+            "Peru": 8, "Philippines": 6, "Poland": 3, "Portugal": 3, "Puerto Rico": 8,
+            "Qatar": 7, "Reunion": 4, "Romania": 3, "Russian Federation": 7, "Rwanda": 4,
+            "Samoa": 8, "San Marino": 3, "Sao Tome And Principe": 1, "Saudi Arabia": 7,
+            "Senegal": 4, "Serbia": 3, "Seychelles": 4, "Sierra Leone": 4, "Singapore": 6,
+            "Slovakia": 3, "Slovenia": 3, "Solomon Islands": 8, "Somalia": 4,
+            "South Africa": 4, "South Georgia And The South Sandwich Islands": 8,
+            "South Korea": 6, "Spain": 3, "Sri Lanka": 6, "St. Helena": 4, "St. Kitts And Nevis": 8,
+            "St. Lucia": 8, "St. Pierre And Miquelon": 8, "St. Vincent And The Grenadines": 8,
+            "Sudan": 4, "Suriname": 8, "Swaziland": 4, "Sweden": 3, "Switzerland": 3,
+            "Syria": 7, "Taiwan": 6, "Tajikistan": 7, "Tanzania": 4, "Thailand": 6,
+            "Togo": 4, "Tonga": 8, "Trinidad And Tobago": 8, "Tunisia": 4, "Turkey": 3,
+            "Turkmenistan": 7, "Turks And Caicos Islands": 8, "Uganda": 4, "Ukraine": 3,
+            "United Arab Emirates": 7, "United Kingdom": 3, "United States": 8, "Uruguay": 8,
+            "Uzbekistan": 7, "Vanuatu": 8, "Vatican City": 3, "Venezuela": 8, "Vietnam": 6,
+            "Wallis And Futuna": 8, "Yemen": 7, "Zambia": 4, "Zimbabwe": 4
+        };
+
+        // Datos de tarifas internacionales (extraídos de Tarifas Internacionales 2025.pdf)
+        const tarifasInternacionales = [
+            {peso: 0.5, zonas: [40949, 44599, 48249, 51899, 55549, 59199, 62849, 66499]},
+            {peso: 1, zonas: [44599, 48249, 51899, 55549, 59199, 62849, 66499, 70149]},
+            {peso: 1.5, zonas: [48249, 51899, 55549, 59199, 62849, 66499, 70149, 73799]},
+            {peso: 2, zonas: [51899, 55549, 59199, 62849, 66499, 70149, 73799, 77449]},
+            {peso: 2.5, zonas: [55549, 59199, 62849, 66499, 70149, 73799, 77449, 81099]},
+            {peso: 3, zonas: [59199, 62849, 66499, 70149, 73799, 77449, 81099, 84749]},
+            {peso: 3.5, zonas: [62849, 66499, 70149, 73799, 77449, 81099, 84749, 88399]},
+            {peso: 4, zonas: [66499, 70149, 73799, 77449, 81099, 84749, 88399, 92049]},
+            {peso: 4.5, zonas: [70149, 73799, 77449, 81099, 84749, 88399, 92049, 95699]},
+            {peso: 5, zonas: [73799, 77449, 81099, 84749, 88399, 92049, 95699, 99349]},
+            {peso: 5.5, zonas: [77449, 81099, 84749, 88399, 92049, 95699, 99349, 103000]},
+            {peso: 6, zonas: [81099, 84749, 88399, 92049, 95699, 99349, 103000, 106650]},
+            {peso: 6.5, zonas: [84749, 88399, 92049, 95699, 99349, 103000, 106650, 110300]},
+            {peso: 7, zonas: [88399, 92049, 95699, 99349, 103000, 106650, 110300, 113950]},
+            {peso: 7.5, zonas: [92049, 95699, 99349, 103000, 106650, 110300, 113950, 117600]},
+            {peso: 8, zonas: [95699, 99349, 103000, 106650, 110300, 113950, 117600, 121250]},
+            {peso: 8.5, zonas: [99349, 103000, 106650, 110300, 113950, 117600, 121250, 124900]},
+            {peso: 9, zonas: [103000, 106650, 110300, 113950, 117600, 121250, 124900, 128550]},
+            {peso: 9.5, zonas: [106650, 110300, 113950, 117600, 121250, 124900, 128550, 132200]},
+            {peso: 10, zonas: [110300, 113950, 117600, 121250, 124900, 128550, 132200, 135850]},
+            {peso: 11, zonas: [113950, 117600, 121250, 124900, 128550, 132200, 135850, 139500]},
+            {peso: 12, zonas: [117600, 121250, 124900, 128550, 132200, 135850, 139500, 143150]},
+            {peso: 13, zonas: [121250, 124900, 128550, 132200, 135850, 139500, 143150, 146800]},
+            {peso: 14, zonas: [124900, 128550, 132200, 135850, 139500, 143150, 146800, 150450]},
+            {peso: 15, zonas: [128550, 132200, 135850, 139500, 143150, 146800, 150450, 154100]},
+            {peso: 16, zonas: [132200, 135850, 139500, 143150, 146800, 150450, 154100, 157750]},
+            {peso: 17, zonas: [135850, 139500, 143150, 146800, 150450, 154100, 157750, 161400]},
+            {peso: 18, zonas: [139500, 143150, 146800, 150450, 154100, 157750, 161400, 165050]},
+            {peso: 19, zonas: [143150, 146800, 150450, 154100, 157750, 161400, 165050, 168700]},
+            {peso: 20, zonas: [146800, 150450, 154100, 157750, 161400, 165050, 168700, 172350]},
+            {peso: 21, zonas: [150450, 154100, 157750, 161400, 165050, 168700, 172350, 176000]},
+            {peso: 22, zonas: [154100, 157750, 161400, 165050, 168700, 172350, 176000, 179650]},
+            {peso: 23, zonas: [157750, 161400, 165050, 168700, 172350, 176000, 179650, 183300]},
+            {peso: 24, zonas: [161400, 165050, 168700, 172350, 176000, 179650, 183300, 186950]},
+            {peso: 25, zonas: [165050, 168700, 172350, 176000, 179650, 183300, 186950, 190600]},
+            {peso: 26, zonas: [168700, 172350, 176000, 179650, 183300, 186950, 190600, 194250]},
+            {peso: 27, zonas: [172350, 176000, 179650, 183300, 186950, 190600, 194250, 197900]},
+            {peso: 28, zonas: [176000, 179650, 183300, 186950, 190600, 194250, 197900, 201550]},
+            {peso: 29, zonas: [179650, 183300, 186950, 190600, 194250, 197900, 201550, 205200]},
+            {peso: 30, zonas: [183300, 186950, 190600, 194250, 197900, 201550, 205200, 208850]},
+            {peso: 40, zonas: [205200, 208850, 212500, 216150, 219800, 223450, 227100, 230750]},
+            {peso: 50, zonas: [227100, 230750, 234400, 238050, 241700, 245350, 249000, 252650]},
+            {peso: 60, zonas: [249000, 252650, 256300, 259950, 263600, 267250, 270900, 274550]},
+            {peso: 70, zonas: [270900, 274550, 278200, 281850, 285500, 289150, 292800, 296450]}
+        ];
+
+        // Funciones para manejar las pestañas
+        function setupTabs() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remover clase activa de todos los botones y contenidos
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Activar el botón y contenido seleccionado
+                    button.classList.add('active');
+                    const tabId = button.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        }
+
+        // Función para buscar países
+        function setupCountrySearch() {
+            const paisInput = document.getElementById('pais-destino');
+            const countryList = document.getElementById('country-list');
+            
+            paisInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const filteredCountries = Object.keys(paisesZonas)
+                    .filter(country => country.toLowerCase().includes(searchTerm))
+                    .sort();
+                
+                if (searchTerm.length > 1 && filteredCountries.length > 0) {
+                    renderCountryList(filteredCountries);
+                    countryList.style.display = 'block';
+                } else {
+                    countryList.style.display = 'none';
+                }
+            });
+            
+            // Cerrar lista al hacer clic fuera
+            document.addEventListener('click', (e) => {
+                if (e.target !== paisInput) {
+                    countryList.style.display = 'none';
+                }
+            });
+        }
+        
+        function renderCountryList(countries) {
+            const countryList = document.getElementById('country-list');
+            countryList.innerHTML = '';
+            
+            countries.forEach(country => {
+                const div = document.createElement('div');
+                div.className = 'country-item';
+                div.textContent = country;
+                div.addEventListener('click', () => {
+                    document.getElementById('pais-destino').value = country;
+                    countryList.style.display = 'none';
+                    updateZoneDisplay(country);
+                });
+                countryList.appendChild(div);
+            });
+        }
+        
+        function updateZoneDisplay(country) {
+            const zonaDisplay = document.getElementById('zona-display');
+            if (paisesZonas[country]) {
+                zonaDisplay.textContent = `Zona: ${paisesZonas[country]}`;
+            } else {
+                zonaDisplay.textContent = 'Zona: -';
+            }
+        }
+
+        // Cotizador Nacional
+        function setupNationalCalculator() {
+            const btn = document.getElementById('btn-cotizar-nacional');
+            btn.addEventListener('click', calculateNationalShipping);
+        }
+        
+        function calculateNationalShipping() {
+            const pesoInput = document.getElementById('peso-nacional');
+            const tipoSelect = document.getElementById('tipo-envio');
+            const resultadoDiv = document.getElementById('resultado-nacional');
+            
+            // Validar entrada
+            if (!pesoInput.value || parseFloat(pesoInput.value) <= 0) {
+                resultadoDiv.textContent = 'Por favor ingresa un peso válido';
+                resultadoDiv.className = 'result error';
+                return;
+            }
+            
+            const peso = parseFloat(pesoInput.value);
+            const tipo = tipoSelect.value;
+            
+            // Cálculo simplificado del costo nacional
+            let costo = 0;
+            const costoBase = 5000;  // Costo base
+            const costoPorKg = 2000; // Costo por kg
+            
+            if (tipo === 'express') {
+                // Envío express es 50% más caro
+                costo = (costoBase + (peso * costoPorKg)) * 1.5;
+            } else {
+                // Envío normal
+                costo = costoBase + (peso * costoPorKg);
+            }
+            
+            // Mostrar resultado
+            resultadoDiv.textContent = `Costo estimado: $${costo.toLocaleString('es-CO')} COP`;
+            resultadoDiv.className = 'result success';
+        }
+
+        // Cotizador Internacional
+        function setupInternationalCalculator() {
+            const btn = document.getElementById('btn-cotizar-internacional');
+            btn.addEventListener('click', calculateInternationalShipping);
+        }
+        
+        function calculateInternationalShipping() {
+            const paisInput = document.getElementById('pais-destino');
+            const pesoInput = document.getElementById('peso-internacional');
+            const resultadoDiv = document.getElementById('resultado-internacional');
+            
+            // Validaciones
+            if (!paisInput.value) {
+                resultadoDiv.textContent = 'Por favor selecciona un país de destino';
+                resultadoDiv.className = 'result error';
+                return;
+            }
+            
+            if (!paisesZonas[paisInput.value]) {
+                resultadoDiv.textContent = 'País no encontrado en nuestro sistema';
+                resultadoDiv.className = 'result error';
+                return;
+            }
+            
+            if (!pesoInput.value || parseFloat(pesoInput.value) <= 0) {
+                resultadoDiv.textContent = 'Por favor ingresa un peso válido';
+                resultadoDiv.className = 'result error';
+                return;
+            }
+            
+            const peso = parseFloat(pesoInput.value);
+            const pais = paisInput.value;
+            const zona = paisesZonas[pais];
+            
+            // Validar peso máximo
+            if (peso > 70) {
+                resultadoDiv.textContent = 'El peso máximo permitido es 70 kg';
+                resultadoDiv.className = 'result error';
+                return;
+            }
+            
+            // Buscar la tarifa adecuada
+            let tarifa = null;
+            for (let i = 0; i < tarifasInternacionales.length; i++) {
+                if (peso <= tarifasInternacionales[i].peso) {
+                    tarifa = tarifasInternacionales[i].zonas[zona - 1];
+                    break;
+                }
+            }
+            
+            // Si no se encontró tarifa (peso mayor al último rango), usar la última tarifa
+            if (tarifa === null) {
+                tarifa = tarifasInternacionales[tarifasInternacionales.length - 1].zonas[zona - 1];
+            }
+            
+            // Mostrar resultado
+            resultadoDiv.innerHTML = `
+                <strong>Cotización para ${pais} (Zona ${zona})</strong><br>
+                Peso: ${peso} kg<br>
+                Costo de envío: $${tarifa.toLocaleString('es-CO')} COP
+            `;
+            resultadoDiv.className = 'result success';
+        }
+
+        // Inicializar la aplicación cuando el DOM esté cargado
+        document.addEventListener('DOMContentLoaded', () => {
+            setupTabs();
+            setupCountrySearch();
+            setupNationalCalculator();
+            setupInternationalCalculator();
+        });
+    </script>
+</body>
+</html>
